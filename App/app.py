@@ -52,7 +52,7 @@ def loadCSVFile (file, lst, sep=";"):
     dialect = csv.excel()
     dialect.delimiter=sep
     try:
-        with open(file, encoding="utf-8-sig") as csvfile:
+        with open(file, encoding="utf-8") as csvfile:
             spamreader = csv.DictReader(csvfile, dialect=dialect)
             for row in spamreader: 
                 lst.append(row)
@@ -168,41 +168,16 @@ def countElementsByCriteria(criteria, lst1, lst2):
 
     return resultado
 
-def countElementsByCriteria(criteria, lst_1, lst_2):
-    """
-    Retorna la cantidad de elementos que cumplen con un criterio para una columna dada
-    """
-    cont=0
-    suma=0
-    promedio=0
-    ids=[]
-    t1_start = process_time()
-    for row in lst_1:
-        if row['director_name']==criteria:
-            ids.append(row['id'])
-    for element in lst_2:
-        if element['id'] in ids and float(element['vote_average'])>=6:
-            suma+=float(element['vote_average'])
-            cont+=1
-    t1_stop = process_time()
-    print("Tiempo de ejecución ",t1_stop-t1_start," segundos")
-    if cont>1:
-        promedio=round(suma/cont,2)
-    rta=(cont,promedio)
-    return rta
-
-
-
 def main():
     """
     Método principal del programa, se encarga de manejar todos los metodos adicionales creados
 
     Instancia una lista vacia en la cual se guardarán los datos cargados desde el archivo
     Args: None
-    Return: None
+    Return: None 
     """
-    lista1 = []
-    lista2 = []
+    lista1= []
+    lista2= [] #instanciar una lista vacia
     while True:
         printMenu() #imprimir el menu de opciones en consola
         inputs =input('Seleccione una opción para continuar\n') #leer opción ingresada
@@ -214,16 +189,16 @@ def main():
                 print("Datos cargados del archivo Detalles, "+str(len(lista2))+" elementos cargados")     
             elif int(inputs[0])==2: #opcion 2
                 if len(lista1)==0 and len(lista2)==0: #obtener la longitud de la lista
-                    print("Las listas esta vacía")    
-                else:
-                    print("La lista del casting tiene "+str(len(lista1))+" elementos")
-                    print("La lista con los detalles tiene "+str(len(lista2))+" elementos")
+                    print("La lista esta vacía")    
+                else: 
+                    print("La lista del archivo Casting tiene: "+str(len(lista1))+" elementos")
+                    print("La lista del archivo Detalles tiene: "+str(len(lista2))+" elementos")
             elif int(inputs[0])==3: #opcion 3
                 lista=int(input("Digite numero ( 1 o 2) para buscar en una lista especifica: "))
                 criteria =input('Ingrese el criterio de búsqueda\n')
-                columna=str(input("Digite la columna: "))
+                columna=input("Ingrese la columna: ")
                 if lista==1:
-                    counter=countElementsFilteredByColumn(criteria,columna,lista1) #filtrar una columna por criterio  
+                    counter=countElementsFilteredByColumn(criteria, columna, lista1) #filtrar una columna por criterio  
                     print("Coinciden ",counter," elementos con el criterio: ", criteria  )
                 elif lista==2:
                     counter=countElementsFilteredByColumn(criteria,columna, lista2) #filtrar una columna por criterio  
@@ -234,7 +209,6 @@ def main():
                 print("Las peliculas que el director",criteria,"tiene bien votadas y su promedio son respectivamente",counter)
             elif int(inputs[0])==0: #opcion 0, salir
                 sys.exit(0)
-
 
 if __name__ == "__main__":
     main()
